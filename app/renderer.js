@@ -7,7 +7,9 @@ import { clipboard, ipcRenderer } from 'electron';
 
 const writeToClipboard = content => {
   clipboard.writeText(content);
-  console.log(`Wrote to clipboard:\n\n${content}`);
+  new Notification('Clipping Copied', {
+    body: `${clipboard.readText()}`,
+  });
 };
 
 class Application extends React.Component {
