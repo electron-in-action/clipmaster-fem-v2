@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, globalShortcut } from 'electron';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -30,6 +30,21 @@ const createWindow = () => {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+
+  const createClipping = globalShortcut.register('CmdOrCtrl+Alt+!', () => {
+    mainWindow.webContents.send('create-new-clipping');
+  });
+
+  const writeClipping = globalShortcut.register('CmdOrCtrl+Alt+@', () => {
+    mainWindow.webContents.send('write-to-clipboard');
+  });
+
+  if (!createClipping) {
+    console.error('Registration failed', 'createClipping');
+  }
+  if (!writeClipping) {
+    console.error('Registration failed', 'writeClipping');
+  }
 };
 
 // This method will be called when Electron has finished
@@ -56,3 +71,7 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+
+app.on('will-quit', () => {
+  globalShortcut.unregisterAll();
+});

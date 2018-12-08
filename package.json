@@ -47,10 +47,13 @@
     }
   },
   "dependencies": {
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "electron-compile": "^6.4.3",
     "electron-squirrel-startup": "^1.0.0",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3"
+    "immutable": "^4.0.0-rc.12",
+    "react": "^16.7.0-alpha.2",
+    "react-dom": "^16.7.0-alpha.2",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",
@@ -60,6 +63,7 @@
     "electron-prebuilt-compile": "3.0.10",
     "eslint": "^3",
     "eslint-config-airbnb": "^15",
+    "eslint-plugin-class-property": "^1.1.0",
     "eslint-plugin-import": "^2",
     "eslint-plugin-jsx-a11y": "^5",
     "eslint-plugin-react": "^7"
