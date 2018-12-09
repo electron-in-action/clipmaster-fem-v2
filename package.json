@@ -53,6 +53,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "immutable": "^4.0.0-rc.12",
     "knex": "^0.15.2",
+    "menubar": "^5.2.3",
     "react": "^16.7.0-alpha.2",
     "react-dom": "^16.7.0-alpha.2",
     "sqlite3": "^4.0.4",
