@@ -1,9 +1,9 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-import { v4 as uuid } from 'uuid';
-
 import { clipboard, ipcRenderer } from 'electron';
+
+import database from './database';
 
 const writeToClipboard = content => {
   clipboard.writeText(content);
@@ -18,6 +18,8 @@ class Application extends React.Component {
   componentDidMount() {
     ipcRenderer.on('write-to-clipboard', this.handleWriteToClipboard);
     ipcRenderer.on('create-new-clipping', this.createNewClipping);
+
+    this.fetchClippings();
   }
 
   componentWillUnmount() {
@@ -25,15 +27,34 @@ class Application extends React.Component {
     ipcRenderer.off('create-new-clipping', this.createNewClipping);
   }
 
+  fetchClippings = () => {
+    database('clippings')
+      .select()
+      .then(clippings => this.setState({ clippings }));
+  };
+
   createNewClipping = () => {
-    const { clippings } = this.state;
-
     const content = clipboard.readText();
-    const id = uuid();
 
-    const clipping = { id, content };
+    database('clippings')
+      .insert({ content })
+      .then(this.fetchClippings);
+  };
 
-    this.setState({ clippings: [clipping, ...clippings] });
+  removeClipping = id => {
+    database('clippings')
+      .where('id', id)
+      .delete()
+      .then(this.fetchClippings);
+  };
+
+  updateClipping = id => {
+    database('clippings')
+      .where('id', id)
+      .update({
+        content: clipboard.readText(),
+      })
+      .then(this.fetchClippings);
   };
 
   handleWriteToClipboard = () => {
@@ -53,7 +74,12 @@ class Application extends React.Component {
         <section className="content">
           <div className="clippings-list">
             {this.state.clippings.map(clipping => (
-              <Clipping {...clipping} key={clipping.id} />
+              <Clipping
+                {...clipping}
+                key={clipping.id}
+                onRemove={this.removeClipping}
+                onUpdate={this.updateClipping}
+              />
             ))}
           </div>
         </section>
@@ -62,16 +88,22 @@ class Application extends React.Component {
   }
 }
 
-const Clipping = ({ content }) => {
+const Clipping = ({ id, content, onRemove, onUpdate }) => {
   const copy = () => writeToClipboard(content);
+  const remove = () => onRemove(id);
+  const update = () => onUpdate(id);
 
   return (
     <article className="clippings-list-item">
-      <div className="clipping-text" disabled={true}>
+      <div className="clipping-text" disabled>
         {content}
       </div>
       <div className="clipping-controls">
         <button onClick={copy}>&rarr; Clipboard</button>
+        <button onClick={update}>Update</button>
+        <button className="remove-clipping" onClick={remove}>
+          Remove
+        </button>
       </div>
     </article>
   );

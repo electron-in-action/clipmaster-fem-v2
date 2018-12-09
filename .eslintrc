@@ -1,4 +1,5 @@
 {
+  "parser": "babel-eslint",
   "extends": "eslint-config-airbnb",
   "env": {
     "browser": true
@@ -12,6 +13,12 @@
     "import/no-unresolved": [2, { "ignore": ["electron"] }],
     "linebreak-style": 0,
     "global-require": 0,
-    "react/jsx-filename-extension": 0
+    "react/jsx-filename-extension": 0,
+    "arrow-parens": 0,
+    "consistent-return": 0,
+    "no-new": 0,
+    "no-undef": 0,
+    "react/prop-types": 0,
+    "no-unused-vars": 0
   }
 }
