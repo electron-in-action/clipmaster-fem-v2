@@ -1,4 +1,4 @@
-import { app, BrowserWindow, globalShortcut } from 'electron';
+import { app, BrowserWindow } from 'electron';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -30,18 +30,6 @@ const createWindow = () => {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
-
-  const createClippingShortcut = globalShortcut.register(
-    'CommandOrControl+!',
-    () => {
-      console.log('Going to send a message to create a new clipping');
-      mainWindow.webContents.send('create-new-clipping');
-    },
-  );
-
-  if (!createClippingShortcut) {
-    console.error('Registration Failed', 'create-clipping');
-  }
 };
 
 // This method will be called when Electron has finished
