@@ -49,8 +49,11 @@
   "dependencies": {
     "electron-compile": "^6.4.3",
     "electron-squirrel-startup": "^1.0.0",
+    "knex": "^0.16.2",
+    "menubar": "^5.2.3",
     "react": "^16.6.3",
-    "react-dom": "^16.6.3"
+    "react-dom": "^16.6.3",
+    "sqlite3": "^4.0.4"
   },
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",

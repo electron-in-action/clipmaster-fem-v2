@@ -1,4 +1,51 @@
-import { app, BrowserWindow, globalShortcut } from 'electron';
+import { app, globalShortcut, Menu } from 'electron';
+
+import Menubar from 'menubar';
+
+const menubar = Menubar({
+  preloadWindow: true,
+  index: `file://${__dirname}/index.jade`,
+});
+
+menubar.on('ready', () => {
+  const secondaryMenu = Menu.buildFromTemplate([
+    {
+      label: 'Quit',
+      click() {
+        menubar.app.quit();
+      },
+      accelator: 'CommandOrControl+Q',
+    },
+  ]);
+
+  menubar.tray.on('right-click', () => {
+    menubar.tray.popUpContextMenu(secondaryMenu);
+  });
+
+  const createClippingShortcut = globalShortcut.register(
+    'CommandOrControl+!',
+    () => {
+      console.log('Going to send a message to create a new clipping');
+      mainWindow.webContents.send('create-new-clipping');
+    },
+  );
+
+  if (!createClippingShortcut) {
+    console.error('Registration Failed', 'create-clipping');
+  }
+
+  const writeToClipboardShortcut = globalShortcut.register(
+    'CommandOrControl+@',
+    () => {
+      console.log('Going to send a message to write to the clipboard');
+      mainWindow.webContents.send('write-to-clipboard');
+    },
+  );
+
+  if (!writeToClipboardShortcut) {
+    console.error('Registration Failed', 'write-to-clipboard');
+  }
+});
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -30,24 +77,12 @@ const createWindow = () => {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
-
-  const createClippingShortcut = globalShortcut.register(
-    'CommandOrControl+!',
-    () => {
-      console.log('Going to send a message to create a new clipping');
-      mainWindow.webContents.send('create-new-clipping');
-    },
-  );
-
-  if (!createClippingShortcut) {
-    console.error('Registration Failed', 'create-clipping');
-  }
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+// app.on('ready', createWindow);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
